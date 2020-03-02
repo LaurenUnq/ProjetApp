@@ -1,18 +1,20 @@
 //
-//  Inscription.swift
+//  MonCompte.swift
 //  ProjetV0
 //
 //  Created by user164566 on 2/28/20.
 //  Copyright © 2020 user164566. All rights reserved.
 //
 
-
 import SwiftUI
+import Foundation
 
-struct Inscription: View {
+struct MonCompte: View {
     @Binding var session : Utilisateur
     @Binding var listeBD : UtilisateurListe
 
+    
+    
     //Pour faire un retour une fois qu'on a appuyé sur un bouton
     @Environment(\.presentationMode) var presentationMode
     
@@ -25,7 +27,7 @@ struct Inscription: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text ("Connexion")
+                Text ("Compte")
                 Spacer()
                 Form {
                     TextField("Pseudo : ", text: $pseudo)
@@ -34,15 +36,22 @@ struct Inscription: View {
                     TextField("Ville : ", text : $ville)
                     
                 }
+                Text ("Pseudo : " + self.session.getPseudo())
+                Text ("Email : " + self.session.getEmail())
+                Text ("Ville : " + self.session.getVille())
+                
+
                 NavigationLink(destination : Accueil(session: self.session, listeBD: self.listeBD)) {
                     Button(action: {
                         self.session = Utilisateur(pseudo: self.pseudo, email: self.email, password: self.password, isAdmin: true, ville: self.ville)
                         self.session.log()
                         self.listeBD.insert(utilisateur: self.session)
+                        print(self.session)
+                        print(self.listeBD)
                         self.presentationMode.wrappedValue.dismiss()
                         
                     }) {
-                    Text("S'inscrire")
+                    Text("Modifier")
                     }
                 }
             }

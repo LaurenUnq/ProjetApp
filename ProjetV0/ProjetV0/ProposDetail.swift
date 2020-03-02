@@ -9,10 +9,16 @@
 import SwiftUI
 
 struct ProposDetail: View {
+    
+    let session : Utilisateur
+    let listeBD : UtilisateurListe
+
     var contenu : Propos
     
-    init(contenu : Contenu) {
+    init(contenu : Contenu, utilisateur : Utilisateur, liste : UtilisateurListe) {
         self.contenu = contenu as! Propos
+        self.session = utilisateur
+        self.listeBD = liste
     }
     
     var body: some View {
@@ -21,10 +27,10 @@ struct ProposDetail: View {
                 Text ("Propos")
                 Text(contenu.description)
                 Spacer()
-                NavigationLink(destination : LireCommentaires(contenu: self.contenu)) {
+                NavigationLink(destination : LireCommentaires(contenu: self.contenu, utilisateur: self.session, liste: self.listeBD)) {
                    Text("Commentaires")
                 }
-                NavigationLink(destination : LireReponses(contenu: self.contenu)) {
+                NavigationLink(destination : LireReponses(contenu: self.contenu, utilisateur: self.session, liste : self.listeBD)) {
                    Text("Reponses")
                 }
             }

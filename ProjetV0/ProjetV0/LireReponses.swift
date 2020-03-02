@@ -9,6 +9,10 @@
 import SwiftUI
 
 struct LireReponses: View {
+    
+    let session : Utilisateur
+    let listeBD : UtilisateurListe
+
     var contenu : Propos
     //Pour faire un retour une fois qu'on a appuyé sur un bouton
     @Environment(\.presentationMode) var presentationMode
@@ -17,8 +21,10 @@ struct LireReponses: View {
     @State var contenuR : String = ""
     @State var categorieR : String = ""
 
-    init(contenu : Propos) {
+    init(contenu : Propos, utilisateur : Utilisateur, liste : UtilisateurListe) {
+        self.session = utilisateur
         self.contenu = contenu
+        self.listeBD = liste
     }
     
     var body: some View {
@@ -41,7 +47,7 @@ struct LireReponses: View {
                     TextField("Categorie : ", text : $categorieR)
                     
                 }
-                NavigationLink(destination : Accueil()) {
+                NavigationLink(destination : Accueil(session: self.session, listeBD: self.listeBD)) {
                     Button(action: {
                         self.contenu.reponses.append(
                             Reponse(contenu : self.contenuR, categorie : self.categorieR)

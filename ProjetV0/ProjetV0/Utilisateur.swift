@@ -9,21 +9,28 @@
 import Foundation
 import SwiftUI
 
-class Utilisateur : Identifiable {
+class Utilisateur : Identifiable, ObservableObject {
     
-    init(pseudo: String, email: String, password: String, isAdmin: Bool) {
+    init(pseudo: String, email: String, password: String, isAdmin: Bool, ville : String) {
         self.pseudo = pseudo
         self.email = email
         self.password = password
         self.isAdmin = isAdmin
         self.isActive = false
+        self.ville = ville
     }
     
     @Published var pseudo : String
     @Published var email : String
     @Published var password : String
+    @Published var ville : String
     @Published var isAdmin : Bool
     @Published var isActive : Bool
+    
+    /*
+    static var utilisateurs : [Utilisateur] { get { return self.utilisateurs} set{ self.utilisateurs = newValue} }
+    
+   */
     
     public func log () {
         isActive = true;
@@ -43,6 +50,18 @@ class Utilisateur : Identifiable {
     
     public func setAdmin (new : Bool) {
         self.isAdmin = new;
+    }
+    
+    public func setVille (new : String) {
+        self.ville = new;
+    }
+    
+    public func getVille () -> String {
+        return self.ville;
+    }
+    
+    public func getPassword () -> String {
+        return self.password;
     }
     
     public func getPseudo () -> String {

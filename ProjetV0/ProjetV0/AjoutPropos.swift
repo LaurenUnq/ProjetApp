@@ -9,14 +9,26 @@
 import SwiftUI
 
 struct AjoutPropos: View {
-    @Binding var globalPropos : [Contenu]
+    
+    @Binding var session : Utilisateur
+    @Binding var listeBD : UtilisateurListe
+    
+    @Binding var globalPropos : [Propos]
     @State var contenu : String = ""
     @State var categorie : String = ""
     @State var jaime : Int = 0
     @State var jaimePas : Int = 0
     
-    @Environment(\.presentationMode) var presentationMode
+    /*
+    init(utilisateur : Utilisateur, liste : UtilisateurListe, propos : Binding<[Propos]>){
+        self.session = utilisateur
+        self.listeBD = liste
+        //self.$globalPropos = propos
+    }
+    */
     
+    @Environment(\.presentationMode) var presentationMode
+
     var body: some View {
         NavigationView {
             VStack {
@@ -27,7 +39,7 @@ struct AjoutPropos: View {
                     
                 }
                 //Attention Bien faire le retour ou effacer les champs
-                NavigationLink(destination : Accueil()) {
+                NavigationLink(destination : Accueil(session: self.session, listeBD : self.listeBD)) {
                     Button(action: {
                         self.globalPropos.append(
                             Propos(contenu: self.contenu, categorie: self.categorie))

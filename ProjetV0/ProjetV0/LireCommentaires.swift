@@ -9,6 +9,10 @@
 import SwiftUI
 
 struct LireCommentaires: View {
+    
+    let session : Utilisateur
+    let listeBD : UtilisateurListe
+
     var contenu : Propos
     
     @State var commentaire : String = ""
@@ -17,8 +21,10 @@ struct LireCommentaires: View {
     @Environment(\.presentationMode) var presentationMode
     
     
-    init(contenu : Propos) {
+    init(contenu : Propos, utilisateur : Utilisateur, liste : UtilisateurListe) {
         self.contenu = contenu
+        self.session = utilisateur
+        self.listeBD = liste
     }
     
     var body: some View {
@@ -41,7 +47,7 @@ struct LireCommentaires: View {
                     
                 }
                 //NE PAS UTILISER CA MAIS FAIRE UNE SORTE DE DISMISS
-                NavigationLink(destination : Accueil()) {
+                NavigationLink(destination : Accueil(session: self.session, listeBD: self.listeBD)) {
                     Button(action: {
                         self.contenu.commentaires.append(
                             Commentaire(contenu: self.commentaire))
