@@ -2,14 +2,15 @@ import axios from "axios";
 const headers = {
   "Content-Type": "application/json"
 };
-const burl = "http://localhost:8800";
+const burl = "http://localhost:4000/api";
 
 export default {
-  login: function(email, password) {
+  login: function(email, pseudo, password) {
     return axios.post(
-      `${burl}/user/login`,
+      `${burl}/users/login`,
       {
         email,
+		pseudo,
         password
       },
       {
@@ -18,7 +19,7 @@ export default {
     );
   },
   signup: function(send) {
-    return axios.post(`${burl}/user/signup`, send, { headers: headers });
+    return axios.post(`${burl}/users/register`, send, { headers: headers });
   },
 
   isAuth: function() {

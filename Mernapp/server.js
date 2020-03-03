@@ -1,50 +1,55 @@
-//Définition des modules
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+let express = require('express');
+let mongoose = require('mongoose');
+let cors = require('cors');
+let bodyParser = require('body-parser');
+let dbConfig = require('./config/keys');
 
-//Connexion à la base de donnée
-mongoose
-  .connect("mongodb://localhost/db")
-  .then(() => {
-    console.log("Connected to mongoDB");
-  })
-  .catch((e) => {
-    console.log("Error while DB connecting");
-    console.log(e);
-  });
+// Express Routes
+const userRoute = require('./routes/user.route')
+const proposRoute = require('./routes/propos.route')
+const reponseRoute = require('./routes/reponse.route')
+const categorieRoute = require('./routes/categorie.route')
+//const commentaireRoute = require('./routes/commentaire.route')
 
-//On définit notre objet express nommé app
+// Connecting mongoDB Database
+mongoose.Promise = global.Promise;
+mongoose.connect(dbConfig.mongoURI, {
+  useNewUrlParser: true
+}).then(() => {
+  console.log('Database sucessfully connected!')
+},
+  error => {
+    console.log('Could not connect to database : ' + error)
+  }
+)
+
 const app = express();
-
-//Body Parser
-const urlencodedParser = bodyParser.urlencoded({
-  extended: true
-});
-app.use(urlencodedParser);
-
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(cors());
 
-//Définition des CORS
-app.use(function(req, res, next) {
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  next();
+app.use('/api/users/', userRoute)
+app.use('/api/propos/', proposRoute)
+app.use('/api/reponses/', reponseRoute)
+app.use('/api/categories/', categorieRoute)
+//app.use('/api/commentaires/', commentaireRoute)
+
+
+// PORT
+const port = process.env.PORT || 4000;
+const server = app.listen(port, () => {
+  console.log('Connected to port ' + port)
+})
+
+// 404 Error
+app.use((req, res, next) => {
+  next(new Error('Not Found'));
 });
 
-//Définition du routeur
-const router = express.Router();
-app.use("/user", router);
-require(__dirname + "/controllers/userController")(router);
-
-//Définition et mise en place du port d'écoute
-const port = 8800;
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.use(function (err, req, res, next) {
+  console.error(err.message);
+  if (!err.statusCode) err.statusCode = 500;
+  res.status(err.statusCode).send(err.message);
+});

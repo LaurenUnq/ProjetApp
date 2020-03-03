@@ -6,18 +6,19 @@ export class Signup extends React.Component {
 
   state = {
     email: "",
+	pseudo:"",
     password: "",
     cpassword: ""
   };
 
   send = async () => {
 	console.log("ici");
-    const { email, password, cpassword } = this.state;
+    const { email, pseudo, password, cpassword } = this.state;
     if (!email || email.length === 0) return;
     if (!password || password.length === 0 || password !== cpassword) return;
     try {
 	  console.log("la1");
-      const { data } = await API.signup({ email, password });
+      const { data } = await API.signup({ email, pseudo, password });
 	  console.log("la2")
       localStorage.setItem("token", data.token);
       window.location = "/dashboard";
@@ -34,7 +35,7 @@ export class Signup extends React.Component {
   };
 
   render() {
-    const { email, password, cpassword } = this.state;
+    const { email, pseudo, password, cpassword } = this.state;
     return (
       <div className="Login">
         <FormGroup controlId="email" bsSize="large">
@@ -43,6 +44,16 @@ export class Signup extends React.Component {
             autoFocus
             type="email"
             value={email}
+            onChange={this.handleChange}
+          />
+        </FormGroup>
+
+		<FormGroup controlId="pseudo" bsSize="large">
+          <ControlLabel>Pseudo</ControlLabel>
+          <FormControl
+            autoFocus
+            type="pseudo"
+            value={pseudo}
             onChange={this.handleChange}
           />
         </FormGroup>
