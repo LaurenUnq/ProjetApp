@@ -45,9 +45,9 @@ struct MonCompte: View {
                     Button(action: {
                         self.session = Utilisateur(pseudo: self.pseudo, email: self.email, password: self.password, isAdmin: true, ville: self.ville)
                         self.session.log()
-                        self.listeBD.insert(utilisateur: self.session)
-                        print(self.session)
-                        print(self.listeBD)
+                        //self.listeBD.insert(utilisateur: self.session)
+                        //print(self.session)
+                        //print(self.listeBD)
                         self.presentationMode.wrappedValue.dismiss()
                         
                     }) {

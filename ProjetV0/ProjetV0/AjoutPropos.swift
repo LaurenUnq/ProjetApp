@@ -39,10 +39,10 @@ struct AjoutPropos: View {
                     
                 }
                 //Attention Bien faire le retour ou effacer les champs
-                NavigationLink(destination : Accueil(session: self.session, listeBD : self.listeBD)) {
+                NavigationLink(destination : Accueil(session: self.session, listeBD : self.listeBD, propos: self.globalPropos)) {
                     Button(action: {
                         self.globalPropos.append(
-                            Propos(contenu: self.contenu, categorie: self.categorie))
+                            Propos(contenu: self.contenu, categorie: self.categorie, auteur: self.session, liste : self.listeBD))
                         self.presentationMode.wrappedValue.dismiss()
                         
                     }) {

@@ -12,7 +12,7 @@ struct Accueil: View {
     
     @State var session : Utilisateur
     @State var listeBD : UtilisateurListe
-    @State var propos : [Propos] = [Propos(contenu: "Voici un propos", categorie: "Rue")]
+    @State var propos : [Propos] = []
 
     var body: some View {
         VStack {
@@ -24,12 +24,20 @@ struct Accueil: View {
                             Text("Login")
                         }
                     }
-                    NavigationLink(destination : MonCompte(session: self.$session, listeBD : self.$listeBD)) {
-                        HStack {
-                            Text("Compte")
+                    if (self.session.getActive() == true){
+                        NavigationLink(destination : MonCompte(session: self.$session, listeBD : self.$listeBD)) {
+                            HStack {
+                                Text("Compte")
+                            }
                         }
                     }
-                    Text("Vous êtes connecté en tant que pseudo : " + self.session.getPseudo() )
+
+                    if (self.session.getActive() == true){
+                        Text("Vous êtes connecté en tant que (pseudo) : " + self.session.getPseudo() )
+                    }
+                    else {
+                        Text("Vous êtes connecté anonymement")
+                    }
 
                     Text("A propos").bold().padding(.top).multilineTextAlignment(.leading)
                     
@@ -44,6 +52,19 @@ struct Accueil: View {
                                     Text(p.description)
                                 }
                             }
+                            if (self.session.getActive() == true){
+                                Button(action : {
+                                    p.flike(utilisateur : self.session)
+                                }) {
+                                    Text("Like")
+                                }
+                                Button(action : {
+                                    p.fdislike(utilisateur : self.session)
+                                }) {
+                                    Text("Dislike")
+                                }
+                            }
+
                         }
 
                     }
@@ -58,6 +79,6 @@ struct Accueil: View {
 
 struct Accueil_Previews: PreviewProvider {
     static var previews: some View {
-        Accueil(session: Utilisateur(pseudo: "pseudo", email: "email", password: "pass", isAdmin: true, ville: "Montpellier"), listeBD: UtilisateurListe())
+        Accueil(session: Utilisateur(pseudo: "pseudo", email: "email", password: "pass", isAdmin: true, ville: "Montpellier"), listeBD: UtilisateurListe(), propos : [Propos(contenu: "coucu c'est yb contenu", categorie: "rue", auteur: Utilisateur(pseudo: "pseudo", email: "email", password: "pass", isAdmin: true, ville: "Montpellier"), liste: UtilisateurListe() )])
     }
 }

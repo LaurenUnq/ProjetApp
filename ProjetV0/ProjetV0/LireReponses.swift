@@ -38,6 +38,18 @@ struct LireReponses: View {
                     ForEach(contenu.reponses) {
                         r in
                         Text(r.description)
+                        if (self.session.getActive() == true){
+                            Button(action : {
+                                r.flike(utilisateur : self.session)
+                            }) {
+                                Text("Like")
+                            }
+                            Button(action : {
+                                r.fdislike(utilisateur : self.session)
+                            }) {
+                                Text("Dislike")
+                            }
+                        }
                     }
                         
                 }
@@ -50,7 +62,7 @@ struct LireReponses: View {
                 NavigationLink(destination : Accueil(session: self.session, listeBD: self.listeBD)) {
                     Button(action: {
                         self.contenu.reponses.append(
-                            Reponse(contenu : self.contenuR, categorie : self.categorieR)
+                            Reponse(contenu : self.contenuR, categorie : self.categorieR, auteur : self.session, liste : self.listeBD)
                         )
                         self.presentationMode.wrappedValue.dismiss()
                         

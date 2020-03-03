@@ -10,13 +10,13 @@ import Foundation
 
 class Propos : Contenu {
  
-    public init(contenu: String, categorie : String) {
-        super.init(contenu : contenu)
+    public init(contenu: String, categorie : String, auteur : Utilisateur, liste : UtilisateurListe) {
+        super.init(contenu : contenu, auteur: auteur, liste : liste)
         self.categorie = categorie
     }
     
-    public override init (contenu: String) {
-        super.init(contenu : contenu)
+    public override init (contenu: String, auteur : Utilisateur, liste : UtilisateurListe) {
+        super.init(contenu : contenu, auteur: auteur, liste : liste)
         self.categorie = "Autre"
     }
     

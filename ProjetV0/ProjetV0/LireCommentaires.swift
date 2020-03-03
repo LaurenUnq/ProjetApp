@@ -38,6 +38,19 @@ struct LireCommentaires: View {
                     ForEach(contenu.commentaires) {
                         c in
                         Text(c.description)
+                        if (self.session.getActive() == true){
+                            Button(action : {
+                                c.flike(utilisateur : self.session)
+                            }) {
+                                Text("Like")
+                            }
+                            Button(action : {
+                                c.fdislike(utilisateur : self.session)
+                            }) {
+                                Text("Dislike")
+                            }
+                        }
+
                     }
                         
                 }
@@ -50,7 +63,7 @@ struct LireCommentaires: View {
                 NavigationLink(destination : Accueil(session: self.session, listeBD: self.listeBD)) {
                     Button(action: {
                         self.contenu.commentaires.append(
-                            Commentaire(contenu: self.commentaire))
+                            Commentaire(contenu: self.commentaire, auteur: self.session, liste: self.listeBD))
                         self.presentationMode.wrappedValue.dismiss()
                     }) {
                     Text("Ajouter le commentaire")
