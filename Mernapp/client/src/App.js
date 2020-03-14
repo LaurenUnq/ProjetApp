@@ -4,8 +4,10 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Dashboard } from "./components/Dashboard/Dashboard.js";
 import { Login } from "./components/Login/Login.js";
 import { Signup } from "./components/Signup/Signup.js";
+import { addPropos } from "./components/Propos/addPropos.js";
 import { PrivateRoute } from "./components/PrivateRoute.js";
 import "./App.css";
+import "./css/Style1.css"
 
 /* Fonctionnel */
 /*
@@ -42,6 +44,7 @@ class App extends Component {
               <Route exact path="/" component={Login} />
               <Route exact path="/signup" component={Signup} />
               <PrivateRoute path="/dashboard" component={Dashboard} />
+			  <Route exact path="/addPropos" component = {addPropos} />
             </Switch>
 		  </BrowserRouter>
         </div>

@@ -5,12 +5,11 @@ const headers = {
 const burl = "http://localhost:4000/api";
 
 export default {
-  login: function(email, pseudo, password) {
+  login: function(email, password) {
     return axios.post(
       `${burl}/users/login`,
       {
         email,
-		pseudo,
         password
       },
       {
@@ -28,5 +27,13 @@ export default {
 
   logout: function() {
     localStorage.clear();
+  },
+
+  addPropos: function(send){
+    return axios.post(`${burl}/propos/create-propos`, send, { headers: headers });
+  },
+
+  getAllPropos: function(){
+  	  return axios.get(`${burl}/propos/`, { headers: headers });
   }
 }

@@ -6,11 +6,17 @@ let commentaireSchema = new Schema({
     type: String,
     required: true
   },
-  like: {
-    type: Number
+  likes: {
+    type: Number,
+    default: 0
   },
-  dislike: {
-    type: Number
+  dislikes: {
+    type: Number,
+    default: 0
+  },
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
   propos: {
     type: Schema.Types.ObjectId, 
