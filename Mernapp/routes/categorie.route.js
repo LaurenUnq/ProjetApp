@@ -5,6 +5,8 @@ let mongoose = require('mongoose'),
 let categoriePropos = require('../models/CategoriePropos')
 let categorieReponse = require('../models/CategorieReponse')
 
+// /categories
+
 // Retourne toutes les catégories de propos
 router.get('/propos', (req, res) => {
     categoriePropos.find((error, data) => {

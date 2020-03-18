@@ -20,7 +20,9 @@
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
     "jsonwebtoken": "^8.5.1",
+    "materialize-css": "^1.0.0-rc.2",
     "mongodb": "^3.5.4",
+    "mongodb-client-encryption": "^1.0.1",
     "mongoose": "^5.9.2"
   },
   "devDependencies": {

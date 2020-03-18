@@ -4,7 +4,10 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Dashboard } from "./components/Dashboard/Dashboard.js";
 import { Login } from "./components/Login/Login.js";
 import { Signup } from "./components/Signup/Signup.js";
-import { addPropos } from "./components/Propos/addPropos.js";
+import { Propos } from "./components/Propos/Propos.js";
+import { CatPropos } from "./components/CatPropos/CatPropos.js";
+import { Commentaire } from "./components/Commentaire/Commentaire.js";
+import { Reponse } from "./components/Reponse/Reponse.js";
 import { PrivateRoute } from "./components/PrivateRoute.js";
 import "./App.css";
 import "./css/Style1.css"
@@ -44,7 +47,10 @@ class App extends Component {
               <Route exact path="/" component={Login} />
               <Route exact path="/signup" component={Signup} />
               <PrivateRoute path="/dashboard" component={Dashboard} />
-			  <Route exact path="/addPropos" component = {addPropos} />
+              <Route exact path="/Propos" component = {Propos} />
+              <Route exact path="/CatPropos" component = {CatPropos} />
+              <Route exact path="/:proposId/commentaire" component = {Commentaire} />
+              <Route exact path="/reponse" component = {Reponse} />
             </Switch>
 		  </BrowserRouter>
         </div>
