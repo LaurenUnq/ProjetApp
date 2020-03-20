@@ -44,8 +44,19 @@ export default {
 
   getProposId: function(proposId){
     return axios.get(`${burl}/propos/${proposId}`, { headers: headers });
-},
+  },
 
+  getTop5: function(){
+    return axios.get(`${burl}/propos/top5`, { headers: headers });
+  },
+
+  like: function(send){
+    return axios.put(`${burl}/propos/like/like-propos`, send, { headers: headers, 'auth-token' : token  });
+  },
+
+  dislike: function(send){
+    return axios.put(`${burl}/propos/dislike-propos`, send, { headers: headers, 'auth-token' : token  });
+  },
 
   /*----------------- COMMENTAIRE --------------*/
 
@@ -54,9 +65,17 @@ export default {
   },
 
   getAllCommentaire: function(proposId){
-    console.log("api")
-    console.log(`${burl}/propos/${proposId}/commentaire`)
-    return axios.get(`${burl}/propos/${proposId}/commentaire`, { headers: headers });
+    return axios.get(`${burl}/propos/${proposId}/commentaires`, { headers: headers });
+  },
+
+  /*----------------- Reponse --------------*/
+
+  addReponse: function(send){
+    return axios.put(`${burl}/propos/add-reponse `, send, { headers: headers, token : token });
+  },
+
+  getAllReponse: function(proposId){
+    return axios.get(`${burl}/propos/${proposId}/reponses`, { headers: headers });
   },
 
   /*----------------- CATEGORIE PROPOS --------------*/
@@ -66,6 +85,15 @@ export default {
 
   getAllCatPropos: function(){
     return axios.get(`${burl}/categories/propos`, { headers: headers });
+  },
+
+  /*----------------- CATEGORIE REPONSE --------------*/
+  addCatReponse: function(send){
+    return axios.post(`${burl}/categories/create-categorie-reponse`, send, { headers: headers });
+  },
+
+  getAllCatReponse: function(){
+    return axios.get(`${burl}/categories/reponse`, { headers: headers });
   },
 
   

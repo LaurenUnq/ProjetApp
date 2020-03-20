@@ -8,12 +8,18 @@ export class CatPropos extends React.Component {
     super(propos);
     this.state = {
       contenu: "",
-      allCatPropos : []
+      allCatPropos : [],
+
+      allCatReponse : []
   	}
 
 	this.getAllCatPropos = this.getAllCatPropos.bind(this);
 
   this.getAllCatPropos();
+
+  this.getAllCatReponse = this.getAllCatReponse.bind(this);
+
+  this.getAllCatReponse();
   
   }
 
@@ -23,12 +29,28 @@ export class CatPropos extends React.Component {
     this.setState({allCatPropos : callCatPropos.data})
 }
 
+  getAllCatReponse = async() => {
+    const callCatReponse= await API.getAllCatReponse();
+  //console.log(callPropos.data)
+    this.setState({allCatReponse : callCatReponse.data})
+  }
+
   send = async () => {
     const { contenu} = this.state;
     if (!contenu || contenu.length === 0) return;
     try {
 	  const { data } = await API.addCatPropos({ contenu});
-	  console.log("addd CATprpos")
+      window.location = "/dashboard";
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  addReponse = async () => {
+    const { contenu} = this.state;
+    if (!contenu || contenu.length === 0) return;
+    try {
+	  const { data } = await API.addCatReponse({ contenu});
       window.location = "/dashboard";
     } catch (error) {
       console.error(error);
@@ -69,8 +91,23 @@ export class CatPropos extends React.Component {
           </FormGroup>
 
           <Button onClick={this.send} block bsSize="large" type="submit">
-            Ajouter la categorie
+            Ajouter la categorie Propos
           </Button>
+
+          <FormGroup controlId="contenu" bsSize="large">
+            <ControlLabel>CategorieReponse</ControlLabel>
+            <FormControl
+              autoFocus
+              type="contenu"
+              value={contenu}
+              onChange={this.handleChange}
+            />
+          </FormGroup>
+
+          <Button onClick={this.addReponse} block bsSize="large" type="submit">
+            Ajouter la categorie Rep
+          </Button>
+
           {
             allCatPropos.map
               (CatPropos => 

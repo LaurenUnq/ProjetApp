@@ -62,7 +62,7 @@ export class Commentaire extends React.Component {
           <h1>Qwing</h1>
           <ul>
             <li><a className="active" href= "/dashboard">Home</a></li>
-            <li><a href="#propos">Propos</a></li>
+            <li><a href="/propos">Propos</a></li>
             <li><a href="#reponses">Reponses</a></li>
             <li><a href="#about">About</a></li>
             <Button onClick={this.disconnect} bsSize="large" type="submit">

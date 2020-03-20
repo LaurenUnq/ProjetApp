@@ -16,6 +16,25 @@ const login = require('../middleware/login')
 const keys = require('../config/keys');
 const jwt = require('jsonwebtoken')
 
+// Retourne toutes les propos
+router.get('/', (req, res) => {
+  ProposSchema.find((error, data) => {
+      if (error)
+          return next(error)
+      else
+          res.json(data)
+  }).populate('categorie').populate('reponses').populate('commentaires').populate('creator', '_id email pseudo')
+})
+
+// Retourne les propos TOP 5
+router.get('/top5', (req, res) => {
+  ProposSchema.find((error, data) => {
+    if (error)
+        return next(error)
+    else
+        res.json(data)
+}).populate('categorie').populate('reponses').populate('commentaires').populate('creator', '_id email pseudo')
+})
 
 // Retourne le propos correspondant à l'id
 router.get('/:proposId', (req, res, next) => {
@@ -26,16 +45,6 @@ router.get('/:proposId', (req, res, next) => {
       else
           res.json(data)
   }).where('_id').equals(proposId)
-})
-
-// Retourne toutes les propos
-router.get('/', (req, res) => {
-  ProposSchema.find((error, data) => {
-      if (error)
-          return next(error)
-      else
-          res.json(data)
-  }).populate('categorie').populate('reponses').populate('commentaires').populate('creator', '_id email pseudo')
 })
 
 // Créée un propos
@@ -186,7 +195,7 @@ router.get('/:proposId/reponses', (req, res, next) => {
 })
 
 // Retourne tous les commentaires d'un propos
-router.get('/:proposId/commentaire', (req, res, next) => {
+router.get('/:proposId/commentaires', (req, res, next) => {
   const propos = req.params.proposId
   if (propos.length != 24)
       return res.status(400).json({msg:'ID invalide'})
@@ -209,13 +218,13 @@ router.get('/:nbPropos', (req, res, next) => {
 })
 
 // Ajoute un propos à la liste des propos aimés d'un utilisateur
-router.put('/like-propos', login, async (req, res, next) => {
+router.put('/like/like-propos', login, async (req, res, next) => {
   const propos = req.body.proposId
   if (propos.length != 24)
       return res.status(400).json({msg:'ID invalide'})
   try {
     const user = await User.findById(req.user.id).select("-password")
-    const existingPropos = await ProposSchema.findById(propos)
+    const existingPropos = await ProposSchema.find().where('_id').equals(propos)
     if (!existingPropos)
       return res.status(400).json({msg:'Ce propos n\' existe pas '})
     if (user.likesPropos.includes(propos))
@@ -243,7 +252,7 @@ router.delete('/dislike-propos', login, async (req, res, next) => {
       return res.status(400).json({msg:'ID invalide'})
   try {
     const user = await User.findById(req.user.id).select("-password")
-    const existingPropos = await ProposSchema.findById(propos).populate('likesPropos')
+    const existingPropos = await ProposSchema.find().where('_id').equals(propos).populate('likesPropos')
     if (!existingPropos)
       return res.status(400).json({msg:'Ce propos n\' existe pas '})
     if (!user.likesPropos.includes(propos))

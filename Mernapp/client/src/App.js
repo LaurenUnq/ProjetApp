@@ -47,10 +47,10 @@ class App extends Component {
               <Route exact path="/" component={Login} />
               <Route exact path="/signup" component={Signup} />
               <PrivateRoute path="/dashboard" component={Dashboard} />
-              <Route exact path="/Propos" component = {Propos} />
-              <Route exact path="/CatPropos" component = {CatPropos} />
+              <Route exact path="/propos" component = {Propos} />
+              <Route exact path="/catPropos" component = {CatPropos} />
               <Route exact path="/:proposId/commentaire" component = {Commentaire} />
-              <Route exact path="/reponse" component = {Reponse} />
+              <Route exact path="/:proposId/reponse" component = {Reponse} />
             </Switch>
 		  </BrowserRouter>
         </div>

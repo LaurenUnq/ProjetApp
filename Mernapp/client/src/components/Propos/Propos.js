@@ -16,20 +16,29 @@ export class Propos extends React.Component {
     this.state = {
       contenu: "",
       categorie:"",
+      proposId : "",
       allPropos : []
 	  }
 
 	this.getAllPropos = this.getAllPropos.bind(this);
+  this.like = this.like.bind(this);
+	this.dislike = this.dislike.bind(this);
 
 	this.getAllPropos();
 
 
 
   }
-  
+
+  like = async(proposId) => {
+  	const {test} = await API.like(proposId);
+  }
+  dislike = async(proposId) => {
+  	const {test} =await API.dislike(proposId);
+  }
+
   getAllPropos = async() => {
   	const callPropos = await API.getAllPropos();
-	  console.log(callPropos.data)
 	  this.setState({allPropos : callPropos.data})
   }
 
@@ -59,7 +68,7 @@ export class Propos extends React.Component {
           <h1>Qwing</h1>
           <ul>
             <li><a className="active" href= "/dashboard">Home</a></li>
-            <li><a href="#propos">Propos</a></li>
+            <li><a href="/propos">Propos</a></li>
             <li><a href="#reponses">Reponses</a></li>
             <li><a href="#about">About</a></li>
             <Button onClick={this.disconnect} bsSize="large" type="submit">
@@ -119,7 +128,15 @@ export class Propos extends React.Component {
                           </div>
                           <div className="card-action">
                             <a href = {`/${propos._id}/commentaire`}>Commentaires</a>
-                            <a>Reponses</a>
+                            <a href = {`/${propos._id}/reponse`}>Reponses</a>
+                          </div>
+                          <div className="card-action">
+                            <Button onClick={ () => this.like(propos._id)} block bsSize="large" type="submit">
+                              Like
+                            </Button>
+                            <Button onClick={ () =>this.dislike(propos._id)} block bsSize="large" type="submit">
+                              Dislike
+                            </Button>
                           </div>
                         </div>
                       </div>
