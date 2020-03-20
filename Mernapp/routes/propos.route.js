@@ -218,7 +218,7 @@ router.get('/:nbPropos', (req, res, next) => {
 })
 
 // Ajoute un propos à la liste des propos aimés d'un utilisateur
-router.put('/like/like-propos', login, async (req, res, next) => {
+router.put('/like-propos', login, async (req, res, next) => {
   const propos = req.body.proposId
   if (propos.length != 24)
       return res.status(400).json({msg:'ID invalide'})
