@@ -4,6 +4,7 @@ import API from "../../utils/API";
 import 'materialize-css/dist/css/materialize.min.css'
 import { CatPropos } from "../CatPropos/CatPropos";
 import { Timestamp } from "mongodb";
+import { Header } from "../Permanent/Header";
 
 export class Commentaire extends React.Component {
 
@@ -18,6 +19,10 @@ export class Commentaire extends React.Component {
 
 	this.getAllCommentaire = this.getAllCommentaire.bind(this);
   this.getProposId = this.getProposId.bind(this);
+  this.like = this.like.bind(this)
+  this.dislike = this.dislike.bind(this)
+  this.likeCom = this.likeCom.bind(this)
+  this.dislikeCom = this.dislikeCom.bind(this)
 
 	this.getProposId();
 	this.getAllCommentaire();
@@ -36,6 +41,27 @@ export class Commentaire extends React.Component {
       
   	  
   }
+
+  likeCom = async(commentaireId) => {
+    await API.likeCom({"commentaireId" : commentaireId});
+	  this.getAllCommentaire();
+  }
+
+  dislikeCom = async(commentaireId) => {
+    await API.dislikeCom({"commentaireId" : commentaireId});
+	  this.getAllCommentaire();
+  }
+
+  like = async(proposId) => {
+    await API.like({"proposId" : proposId});
+    this.getProposId();
+  }
+
+  dislike = async(proposId) => {
+    await API.dislike({"proposId" : proposId});
+    this.getProposId();
+  }
+
 
   send = async () => {
     const { contenu, proposId} = this.state;
@@ -58,18 +84,7 @@ export class Commentaire extends React.Component {
     const { contenu, propos, allCommentaires} = this.state;
     return (
       <div className = "Page">
-        <div className = "menu">
-          <h1>Qwing</h1>
-          <ul>
-            <li><a className="active" href= "/dashboard">Home</a></li>
-            <li><a href="/propos">Propos</a></li>
-            <li><a href="#reponses">Reponses</a></li>
-            <li><a href="#about">About</a></li>
-            <Button onClick={this.disconnect} bsSize="large" type="submit">
-                  Se deconnecter
-            </Button>
-          </ul>
-        </div>
+        <Header />
         <div className="addPropos">
           <h3>Ecrivez votre commentaire</h3>
           <FormGroup controlId="contenu" bsSize="large">
@@ -95,19 +110,27 @@ export class Commentaire extends React.Component {
                   <p>Description : {propos.contenu}</p>
                 </div>
                 <div className="card-action">
-                  <a>retour aux propos</a>
-                  <a>Reponses</a>
+                  <a href = "/propos">retour aux propos</a>
+                  <a href = {"/" + propos._id + "/reponse"}>Reponses</a>
                 </div>
+                <div className="card-action">
+                  <Button onClick={() => this.like(propos._id)} block bsSize="large" type="submit">
+                    Like
+                  </Button>
+                  <Button onClick={() => this.dislike(propos._id)} block bsSize="large" type="submit">
+                    Dislike
+                  </Button>
+                </div>                
               </div>
             </div>
           </div>
           
           {
             allCommentaires.map
-              (commentaire => 
+              ((commentaire, i) => 
                 {
                   return(
-                    <div className="row">
+                    <div className="row" key={i}>
                       <div className="col s12 m6">
                         <div className="card blue-grey darken-1">
                           <div className="card-content white-text">
@@ -115,8 +138,14 @@ export class Commentaire extends React.Component {
                             <p>{commentaire.contenu}</p>
                           </div>
                           <div className="card-action">
-                            <a>Like</a>
-                            <a>Dislike</a>
+                          <div className="card-action">
+                            <Button onClick={() => this.likeCom(commentaire._id)} block bsSize="large" type="submit">
+                              Like
+                            </Button>
+                            <Button onClick={() => this.dislikeCom(commentaire._id)} block bsSize="large" type="submit">
+                              Dislike
+                            </Button>
+                          </div>
                           </div>
                         </div>
                       </div>

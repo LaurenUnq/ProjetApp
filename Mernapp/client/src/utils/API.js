@@ -2,8 +2,11 @@ import axios from "axios";
 const token = localStorage.getItem("token");
 
 const headers = {
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
+  "Access-Control-Allow-Origin" : "*",
+  "auth-token" : token
 };
+
 const burl = "http://localhost:4000/api";
 
 export default {
@@ -33,9 +36,20 @@ export default {
     localStorage.clear();
   },
 
+  getInfos: function() {
+    return axios.get(`${burl}/users/`, { headers: headers });
+  },
+
+  updateAccount: function(send) {
+    return axios.put(`${burl}/users/edit-infos`, send, { headers: headers });
+  },
+
   /*----------------- PROPOS --------------*/
   addPropos: function(send){
-    return axios.post(`${burl}/propos/create-propos`, send, { headers: headers, token : token });
+    if (this.isAuth) {
+      headers["auth-token"] = token
+    }
+    return axios.post(`${burl}/propos/create-propos`, send, { headers: headers });
   },
 
   getAllPropos: function(){
@@ -50,37 +64,90 @@ export default {
     return axios.get(`${burl}/propos/top5`, { headers: headers });
   },
 
-  like: function(send){
-    return axios.put(`${burl}/propos/like-propos`, send, { headers: headers, 'auth-token' : token  });
+  like: async function(send){
+    if (this.isAuth) {
+      headers["auth-token"] = token
+    }
+    var proposLikes = Array.from(await this.getInfos().data.likesPropos)
+    var isLiked = false
+    for (var propos in proposLikes) {
+      if (propos._id = send) {
+        isLiked = true
+        break
+      }
+    }
+    if (!isLiked) {
+        return axios.put(`${burl}/propos/like-propos`,  send, { headers: headers })
+    }
+    else {
+      return axios.delete(`${burl}/propos/dislike-propos`, {headers: headers, data: send})
+    }
   },
 
   dislike: function(send){
-    return axios.put(`${burl}/propos/dislike-propos`, send, { headers: headers, 'auth-token' : token  });
+    if (this.isAuth) {
+      headers["auth-token"] = token
+    }
+    return axios.delete(`${burl}/propos/dislike-propos`, {headers: headers, data: send});
   },
 
   /*----------------- COMMENTAIRE --------------*/
 
   addCommentaire: function(send){
-    return axios.put(`${burl}/propos/add-commentaire `, send, { headers: headers, token : token });
+    if (this.isAuth) {
+      headers["auth-token"] = token
+    }
+    return axios.put(`${burl}/propos/add-commentaire`, send, { headers: headers });
   },
 
   getAllCommentaire: function(proposId){
     return axios.get(`${burl}/propos/${proposId}/commentaires`, { headers: headers });
   },
 
+  likeCom: function(send){
+    if (this.isAuth) {
+      headers["auth-token"] = token
+    }
+    return axios.put(`${burl}/commentaires/like-commentaire`,  send, { headers: headers });
+  },
+
+  dislikeCom: function(send){
+    if (this.isAuth) {
+      headers["auth-token"] = token
+    }
+    return axios.delete(`${burl}/commentaires/unlike-commentaire`, {headers: headers, data: send});
+  },
+
   /*----------------- Reponse --------------*/
 
   addReponse: function(send){
-    return axios.put(`${burl}/propos/add-reponse `, send, { headers: headers, token : token });
+    if (this.isAuth) {
+      headers["auth-token"] = token
+    }
+    return axios.put(`${burl}/propos/add-reponse`, send, { headers: headers });
   },
 
   getAllReponse: function(proposId){
     return axios.get(`${burl}/propos/${proposId}/reponses`, { headers: headers });
   },
 
+  likeRep: function(send){
+    if (this.isAuth) {
+      headers["auth-token"] = token
+    }
+    return axios.put(`${burl}/reponses/like-reponse`,  send, { headers: headers });
+  },
+
+  dislikeRep: function(send){
+    if (this.isAuth) {
+      headers["auth-token"] = token
+    }
+    return axios.delete(`${burl}/reponses/unlike-reponse`, {headers: headers, data: send});
+  },
+
   /*----------------- CATEGORIE PROPOS --------------*/
-  addCatPropos: function(send){
-    return axios.post(`${burl}/categories/create-categorie-propos`, send, { headers: headers });
+  addCatPropos: function(contenu){
+    return axios.post(`${burl}/categories/create-categorie-propos`, contenu, { headers: headers });
   },
 
   getAllCatPropos: function(){
@@ -88,12 +155,12 @@ export default {
   },
 
   /*----------------- CATEGORIE REPONSE --------------*/
-  addCatReponse: function(send){
-    return axios.post(`${burl}/categories/create-categorie-reponse`, send, { headers: headers });
+  addCatReponse: function(contenu){
+    return axios.post(`${burl}/categories/create-categorie-reponse`, contenu, { headers: headers });
   },
 
   getAllCatReponse: function(){
-    return axios.get(`${burl}/categories/reponse`, { headers: headers });
+    return axios.get(`${burl}/categories/reponses`, { headers: headers });
   },
 
   

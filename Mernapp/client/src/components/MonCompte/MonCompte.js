@@ -3,22 +3,38 @@ import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import API from "../../utils/API";
 import { Header } from "../Permanent/Header"
 
-export class Signup extends React.Component {
+export class MonCompte extends React.Component {
 
-  state = {
-    email: "",
-	pseudo:"",
-    password: "",
-    cpassword: ""
-  };
+    constructor(){
+        super();
+        this.state = {
+            email: "",
+            pseudo:"",
+            password: "",
+            cpassword: ""
+        }
+        this.setEmail();
+        this.setPseudo();
+    }
+
+    setEmail = async() => {
+        const email = await API.getInfos()
+        console.log(email)
+        this.setState({email : email.data.email});
+    };
+
+    setPseudo = async() => {
+        const pseudo = await API.getInfos()
+        console.log(pseudo)
+        this.setState({pseudo : pseudo.data.pseudo});
+    };
 
   send = async () => {
     const { email, pseudo, password, cpassword } = this.state;
     if (!email || email.length === 0) return;
     if (!password || password.length === 0 || password !== cpassword) return;
     try {
-      const { data } = await API.signup({ email, pseudo, password });
-      localStorage.setItem("token", data.token);
+      const { data } = await API.updateAccount({ email, pseudo, password });
       window.location = "/dashboard";
     } catch (error) {
       console.error(error);
@@ -40,6 +56,7 @@ export class Signup extends React.Component {
           <FormGroup controlId="email" bsSize="large">
             <ControlLabel>Email</ControlLabel>
             <FormControl
+              readOnly
               autoFocus
               type="email"
               value={email}
@@ -76,7 +93,7 @@ export class Signup extends React.Component {
           </FormGroup>
 
           <Button onClick={this.send} block bsSize="large" type="submit">
-            Inscription
+           Mettre à jour les informations
           </Button>
         </div>
       </div>

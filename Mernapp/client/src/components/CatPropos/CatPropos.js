@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import API from "../../utils/API";
+import { Header } from "../Permanent/Header";
 
 export class CatPropos extends React.Component {
 
@@ -9,49 +10,50 @@ export class CatPropos extends React.Component {
     this.state = {
       contenu: "",
       allCatPropos : [],
-
       allCatReponse : []
   	}
 
 	this.getAllCatPropos = this.getAllCatPropos.bind(this);
 
-  this.getAllCatPropos();
-
   this.getAllCatReponse = this.getAllCatReponse.bind(this);
 
+  this.cReponse = this.cReponse.bind(this);
+
+  this.cPropos = this.cPropos.bind(this);
+
   this.getAllCatReponse();
+
+  this.getAllCatPropos();
   
   }
 
   getAllCatPropos = async() => {
     const callCatPropos = await API.getAllCatPropos();
-  //console.log(callPropos.data)
     this.setState({allCatPropos : callCatPropos.data})
 }
 
   getAllCatReponse = async() => {
     const callCatReponse= await API.getAllCatReponse();
-  //console.log(callPropos.data)
     this.setState({allCatReponse : callCatReponse.data})
   }
 
-  send = async () => {
-    const { contenu} = this.state;
+  cPropos = async () => {
+    const {contenu} = this.state;
     if (!contenu || contenu.length === 0) return;
     try {
-	  const { data } = await API.addCatPropos({ contenu});
-      window.location = "/dashboard";
+      await API.addCatPropos({"contenu" : contenu});
+      this.getAllCatPropos();
     } catch (error) {
       console.error(error);
     }
   };
 
-  addReponse = async () => {
-    const { contenu} = this.state;
+  cReponse = async () => {
+    const {contenu} = this.state;
     if (!contenu || contenu.length === 0) return;
     try {
-	  const { data } = await API.addCatReponse({ contenu});
-      window.location = "/dashboard";
+      await API.addCatReponse({"contenu" : contenu});
+      this.getAllCatReponse();
     } catch (error) {
       console.error(error);
     }
@@ -64,23 +66,11 @@ export class CatPropos extends React.Component {
   };
   
   render() {
-    const {contenu, allCatPropos} = this.state;
+    const {contenu, allCatPropos, allCatReponse} = this.state;
     return (
       <div className = "Page">
-        <div className = "menu">
-          <h1>Qwing</h1>
-          <ul>
-            <li><a className="active" href= "/dashboard">Home</a></li>
-            <li><a href="#propos">Propos</a></li>
-            <li><a href="#reponses">Reponses</a></li>
-            <li><a href="#about">About</a></li>
-            <Button onClick={this.disconnect} bsSize="large" type="submit">
-                  Se deconnecter
-            </Button>
-          </ul>
-        </div>
-        <div className="addPropos">
-          <FormGroup controlId="contenu" bsSize="large">
+        <Header />
+        <FormGroup controlId="contenu" bsSize="large">
             <ControlLabel>Categorie</ControlLabel>
             <FormControl
               autoFocus
@@ -89,38 +79,45 @@ export class CatPropos extends React.Component {
               onChange={this.handleChange}
             />
           </FormGroup>
-
-          <Button onClick={this.send} block bsSize="large" type="submit">
+        <div className="CategorieP">
+          <h3> Categorie Propos</h3>
+          <Button onClick={() => this.cPropos()} block bsSize="large" type="submit">
             Ajouter la categorie Propos
           </Button>
-
-          <FormGroup controlId="contenu" bsSize="large">
-            <ControlLabel>CategorieReponse</ControlLabel>
-            <FormControl
-              autoFocus
-              type="contenu"
-              value={contenu}
-              onChange={this.handleChange}
-            />
-          </FormGroup>
-
-          <Button onClick={this.addReponse} block bsSize="large" type="submit">
-            Ajouter la categorie Rep
-          </Button>
-
           {
             allCatPropos.map
-              (CatPropos => 
+              ( (CatPropos, i) => 
                 {
                   return(
-                    <div className = "Catpropos">
+                    <div className = "Catpropos" key = {i}>
                       {CatPropos.contenu}
                     </div>
                   )
                 }
               )
           }
-        </div>
+
+          </div>
+
+          <div className="CategorieR">
+            <h3> Categorie Reponse</h3>
+            {
+              allCatReponse.map
+                ( (CatReponse, j) => 
+                  {
+                    return(
+                      <div className = "Catpropos" key = {j}>
+                        {CatReponse.contenu}
+                      </div>
+                    )
+                  }
+                )
+            }
+
+            <Button onClick={() => this.cReponse()} block bsSize="large" type="submit">
+              Ajouter la categorie Rep
+            </Button>
+         </div>
       </div>
 	)
   }

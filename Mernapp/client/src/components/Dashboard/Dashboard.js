@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-
+import { Header } from "../Permanent/Header";
 import API from "../../utils/API";
 
 export class Dashboard extends React.Component {
@@ -12,13 +12,25 @@ export class Dashboard extends React.Component {
 	}
 	
 	this.getTop5 = this.getTop5.bind(this);
-	
+	this.like = this.like.bind(this)
+	this.dislike = this.dislike.bind(this)
+	  
 	this.getTop5();
-
   }
 
+  like = async(proposId) => {
+	await API.like({"proposId" : proposId});
+	this.getTop5()
+	}
+
+	dislike = async(proposId) => {
+		await API.dislike({"proposId" : proposId});
+		this.getTop5()
+	}
+
+
   getTop5 = async() => {
-	const cTop5 = await API.getTop5();
+	const cTop5 = await API.getAllPropos();
 	this.setState({top5 : cTop5.data})
   }
 
@@ -30,25 +42,15 @@ export class Dashboard extends React.Component {
 
   render() {
 	const { top5} = this.state;
+	console.log(top5)
     return (
-	  <div className = "Page">
-		<div className = "menu">
-		  <h1>Qwing</h1>
-		  <ul>
-			<li><a className="active" href= "/dashboard">Home</a></li>
-			<li><a href="/Propos">Propos</a></li>
-			<li><a href="#reponses">Reponses</a></li>
-			<li><a href="#about">About</a></li>
-			<Button onClick={this.disconnect} bsSize="large" type="submit">
-					Se deconnecter
-			</Button>
-		  </ul>
-		</div>
+
 		<div className="Dashboard">
+		<Header />
 		  <h2>Accueil</h2>
 		  <p>
-		    Vous trouverez ici les propos sexistes que les utilisateurs ont entendus
-			Vous pouvez proposer une réponse pour ne pas rester de marbre face � ces diffamations.
+		    Vous avez été victime d'un propos sexiste et vous n'avez pas su répondre ?
+				Partagez votre expérience
 		  </p>
 		  <Button onClick={ () => window.location = "/propos"} bsSize="large" type="submit">
 			Voir les propos
@@ -56,22 +58,39 @@ export class Dashboard extends React.Component {
 		  <Button onClick={ () => window.location = "/catPropos"} bsSize="large" type="submit">
 			ajouter une categorie (admin)
 		  </Button>
-		  <h3>Top 5 des propos</h3>
+
+		  <h3>Les plus populaires</h3>
+			<div className="divider"></div>
+			<div className="container" >
 		  {
             top5.map
-              (propos => 
+              ( (propos, i) => 
                 {
                   return(
-                    <div className="row">
-                      <div className="col s12 m6">
+                    <div className="row" key={i}>
+                      <div className="col s12 m6 offset-m3">
                         <div className="card blue-grey darken-1">
                           <div className="card-content white-text">
-                            <span className="card-title"> Categorie : {propos.categorie.contenu} // like : {propos.likes} </span>
-                            <p>{propos.contenu}</p>
+							<div className="row">
+							  <span className="left">Proposé par :  {propos.creator != undefined ? propos.creator.pseudo : "Anonyme"} - {propos.categorie.contenu}</span>
+							</div>
+							  <span className="card-title"> {propos.contenu} </span>
+							  <div className="row" style={{marginBottom: -20}}>
+							  <span className= "bottom left">Créé le :  {propos.created_at.substring(0,10)}</span>
+							  <span className= "bottom right"><Button onClick={() => this.like(propos._id)} type="submit"><i className="material-icons">thumb_up</i></Button>{propos.likes}</span>
+							</div>
                           </div>
                           <div className="card-action">
                             <a href = {`/${propos._id}/commentaire`}>Commentaires</a>
                             <a href = {`/${propos._id}/reponse`}>Reponses</a>
+                          </div>
+						  <div className="card-action">
+                            <Button onClick={() => this.like(propos._id)} block bsSize="large" type="submit">
+                              Like
+                            </Button>
+                            <Button onClick={() => this.dislike(propos._id)}  block bsSize="large" type="submit">
+                              Dislike
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -80,9 +99,9 @@ export class Dashboard extends React.Component {
                 }
               )
           }
-
 		</div>
-	  </div>
+		</div>
+
     );
   }
 }

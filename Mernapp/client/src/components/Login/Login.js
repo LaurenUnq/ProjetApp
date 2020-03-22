@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import API from "../../utils/API";
+import { Header } from "../Permanent/Header";
 
 export class Login extends React.Component {
 
@@ -11,6 +12,7 @@ export class Login extends React.Component {
 
   send = async () => {
     const { email, password } = this.state;
+    console.log(email)
     if (!email || email.length === 0) {
       return;
     }
@@ -55,6 +57,12 @@ export class Login extends React.Component {
         </FormGroup>
         <Button onClick={this.send} block bsSize="large" type="submit">
           Connexion
+        </Button>
+        <Button onClick={() => window.location = "/dashboard"} block bsSize="large" type="submit">
+          Mode hors-ligne
+        </Button>
+        <Button onClick={() => window.location = "/signup"} block bsSize="large" type="submit">
+          Inscription
         </Button>
       </div>
 	)

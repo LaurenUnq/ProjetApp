@@ -8,6 +8,7 @@ import { Propos } from "./components/Propos/Propos.js";
 import { CatPropos } from "./components/CatPropos/CatPropos.js";
 import { Commentaire } from "./components/Commentaire/Commentaire.js";
 import { Reponse } from "./components/Reponse/Reponse.js";
+import { MonCompte } from "./components/MonCompte/MonCompte.js";
 import { PrivateRoute } from "./components/PrivateRoute.js";
 import "./App.css";
 import "./css/Style1.css"
@@ -44,13 +45,15 @@ class App extends Component {
         <div className="App-content">
 		  <BrowserRouter>
             <Switch>
-              <Route exact path="/" component={Login} />
+              <Route exact path="/" component={Dashboard} />
+              <Route exact path="/login" component={Login} />
               <Route exact path="/signup" component={Signup} />
               <PrivateRoute path="/dashboard" component={Dashboard} />
               <Route exact path="/propos" component = {Propos} />
               <Route exact path="/catPropos" component = {CatPropos} />
               <Route exact path="/:proposId/commentaire" component = {Commentaire} />
               <Route exact path="/:proposId/reponse" component = {Reponse} />
+              <Route exact path="/account" component = {MonCompte} />
             </Switch>
 		  </BrowserRouter>
         </div>
